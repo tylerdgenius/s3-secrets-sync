@@ -48,10 +48,33 @@ outputs:
   env_file_path:
     description: 'Path to the downloaded and decrypted .env file'
     value: ${{ steps.pull-env.outputs.downloaded_file }}
+  version:
+    description: 'Version of the s3-secrets-sync action'
+    value: ${{ steps.version.outputs.version }}
+  variable_count:
+    description: 'Number of variables loaded from the .env file'
+    value: ${{ steps.pull-env.outputs.variable_count }}
 
 runs:
   using: 'composite'
   steps:
+    - name: Get action version
+      id: version
+      shell: bash
+      run: |
+        # If running from a tag, use that as the version
+        if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/}
+        else
+          # Otherwise use the commit SHA
+          VERSION="${GITHUB_SHA:-unknown}"
+          if [ ${#VERSION} -gt 7 ]; then
+            VERSION="${VERSION:0:7}"
+          fi
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Running s3-secrets-sync action version: $VERSION"
+        
     - name: Setup s3-secrets-sync
       shell: bash
       run: |
@@ -84,6 +107,16 @@ runs:
         
         echo "Environment variables stored in $OUTPUT_FILE"
         echo "downloaded_file=$OUTPUT_FILE" >> $GITHUB_OUTPUT
+        
+        # Count variables and output the number
+        if [ -f "$OUTPUT_FILE" ]; then
+          VAR_COUNT=$(grep -v '^#' "$OUTPUT_FILE" | grep -v '^$' | wc -l | tr -d ' ')
+          echo "variable_count=$VAR_COUNT" >> $GITHUB_OUTPUT
+          echo "Loaded $VAR_COUNT environment variables"
+        else
+          echo "variable_count=0" >> $GITHUB_OUTPUT
+          echo "No environment variables loaded (file not found)"
+        fi
         
         # If GitHub Actions environment is used, also set the variables in the environment
         if [ -n "$GITHUB_ENV" ]; then
