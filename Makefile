@@ -1,7 +1,7 @@
 # Makefile for s3-secrets-sync
 
 PREFIX ?= /usr/local
-VERSION := 1.0.0
+VERSION := 2.0.0
 
 .PHONY: install uninstall update clean
 
