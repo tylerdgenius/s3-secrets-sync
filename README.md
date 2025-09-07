@@ -1,14 +1,23 @@
 # s3-secrets-sync
 
-A Bash tool for securely syncing environment variables to and from S3.
+A lightweight, Bash-based tool for securely syncing environment variables between local development environments and S3 storage.
 
-## Features
+## Overview
 
+`s3-secrets-sync` makes it easy to:
 - Encrypt `.env` files and upload them to S3
-- Download and decrypt environment files from S3
-- Simple command-line interface
-- Works with AWS S3 or compatible storage services
-- Pure Bash implementation with minimal dependencies
+- Download encrypted environment files from S3 and decrypt them
+- All with a simple command-line interface
+
+## Repository Structure
+
+```
+Makefile            # Installation script
+README.md           # Documentation
+s3-secrets-sync     # Main executable script
+test.sh             # Test script
+VERSION             # Version information
+```
 
 ## Requirements
 
@@ -17,38 +26,65 @@ A Bash tool for securely syncing environment variables to and from S3.
 - jq (for JSON processing)
 - AWS CLI (for S3 operations)
 
+> **Note:** If OpenSSL, jq, or AWS CLI are missing, the tool will attempt to install them automatically on supported platforms (macOS and most Linux distributions).
+
 ## Installation
 
-### Option 1: Using make
+### Using make
 
 ```bash
-git clone https://github.com/yourusername/s3-secrets-sync.git
+# Clone the repository
+git clone https://github.com/tylerdgenius/s3-secrets-sync.git
 cd s3-secrets-sync
+
+# Install globally
 sudo make install
+
+# Or to a custom location
+sudo make install PREFIX=/custom/path
 ```
 
-This will install `s3-secrets-sync` to `/usr/local/bin`. To install to a different location, use:
+### Manual installation
 
 ```bash
-sudo make install PREFIX=/your/custom/path
-```
-
-### Option 2: Manual installation
-
-```bash
-git clone https://github.com/yourusername/s3-secrets-sync.git
+# Clone the repository
+git clone https://github.com/tylerdgenius/s3-secrets-sync.git
 cd s3-secrets-sync
+
+# Make executable and copy to a location in your PATH
 chmod +x s3-secrets-sync
 sudo cp s3-secrets-sync /usr/local/bin/
 ```
 
-## Usage
+## Quick Start
 
-```
-s3-secrets-sync <command> [options]
+### Encrypt and upload an .env file
+
+```bash
+# Set AWS credentials
+export AWS_ACCESS_KEY_ID=your_access_key
+export AWS_SECRET_ACCESS_KEY=your_secret_key
+export AWS_BUCKET_NAME=your-bucket
+export AWS_REGION=us-west-2
+
+# Encrypt and upload in one step
+s3-secrets-sync sync -e production -s api -f .env -k your_encryption_key
 ```
 
-### Commands
+### Download and decrypt an .env file
+
+```bash
+# Set AWS credentials
+export AWS_ACCESS_KEY_ID=your_access_key
+export AWS_SECRET_ACCESS_KEY=your_secret_key
+export AWS_BUCKET_NAME=your-bucket
+export AWS_REGION=us-west-2
+
+# Download and decrypt in one step
+s3-secrets-sync pull -e production -s api -f .env -k your_encryption_key
+```
+
+## Commands
 
 - `encrypt`: Convert .env file to JSON and encrypt it
 - `decrypt`: Decrypt JSON file to .env format
@@ -57,52 +93,66 @@ s3-secrets-sync <command> [options]
 - `sync`: Encrypt and upload in one step
 - `pull`: Download and decrypt in one step
 
-### Options
+## Options
 
-- `-e, --env ENV`: Environment (development, staging, production)
-- `-s, --service TYPE`: Service type (default: api)
-- `-f, --file PATH`: Path to .env file (default: .env)
-- `-k, --key KEY`: Encryption key (can also use ENV_ENCRYPTION_KEY env var)
-- `-b, --bucket NAME`: S3 bucket name (can also use AWS_BUCKET_NAME env var)
-- `-r, --region REGION`: AWS region (can also use AWS_REGION env var)
-- `--endpoint URL`: S3 endpoint URL (default: https://s3.amazonaws.com)
-- `-h, --help`: Show help
-- `-v, --version`: Show version information
+| Option | Description |
+|--------|-------------|
+| `-e, --env ENV` | Environment (development, staging, production) |
+| `-s, --service TYPE` | Service type (default: api) |
+| `-f, --file PATH` | Path to .env file (default: .env) |
+| `-k, --key KEY` | Encryption key (can also use ENV_ENCRYPTION_KEY env var) |
+| `-b, --bucket NAME` | S3 bucket name (can also use AWS_BUCKET_NAME env var) |
+| `-r, --region REGION` | AWS region (can also use AWS_REGION env var) |
+| `--endpoint URL` | S3 endpoint URL (default: https://s3.amazonaws.com) |
+| `-h, --help` | Show help |
+| `-v, --version` | Show version information |
 
-### Environment Variables
+## Environment Variables
 
-- `ENV_ENCRYPTION_KEY`: Encryption key (alternative to -k flag)
-- `AWS_ACCESS_KEY_ID`: AWS access key ID
-- `AWS_SECRET_ACCESS_KEY`: AWS secret access key
-- `AWS_BUCKET_NAME`: S3 bucket name (alternative to -b flag)
-- `AWS_REGION`: AWS region (alternative to -r flag)
+| Variable | Description |
+|----------|-------------|
+| `ENV_ENCRYPTION_KEY` | Encryption key (alternative to -k flag) |
+| `AWS_ACCESS_KEY_ID` | AWS access key ID |
+| `AWS_SECRET_ACCESS_KEY` | AWS secret access key |
+| `AWS_BUCKET_NAME` | S3 bucket name (alternative to -b flag) |
+| `AWS_REGION` | AWS region (alternative to -r flag) |
 
 ## Examples
 
-### Encrypt an .env file
+### Using environment variables
 
 ```bash
-s3-secrets-sync encrypt -e production -s api -f .env -k mypassword
-```
-
-### Sync (encrypt and upload) an .env file
-
-```bash
+# Set environment variables
+export ENV_ENCRYPTION_KEY=mypassword
 export AWS_ACCESS_KEY_ID=your_access_key
 export AWS_SECRET_ACCESS_KEY=your_secret_key
 export AWS_BUCKET_NAME=your-bucket
 export AWS_REGION=us-west-2
 
-s3-secrets-sync sync -e staging --service api --key mypassword
+# Sync (encrypt and upload)
+s3-secrets-sync sync -e staging -s api
+
+# Pull (download and decrypt)
+s3-secrets-sync pull -e staging -s api
 ```
 
-### Pull (download and decrypt) an .env file
+### Using command-line flags
 
 ```bash
-s3-secrets-sync pull -e production -s api -k mypassword -b my-bucket
+# Encrypt
+s3-secrets-sync encrypt -e development -s api -f .env -k mypassword
+
+# Upload
+s3-secrets-sync upload -e development -s api -b my-bucket -r us-west-2
+
+# Download
+s3-secrets-sync download -e production -s api -b my-bucket -r us-west-2
+
+# Decrypt
+s3-secrets-sync decrypt -e production -s api -f .env -k mypassword
 ```
 
-## File Naming
+## File Naming Convention
 
 Files follow this naming pattern:
 - JSON: `palanck-env-<env>-<service>.json`
@@ -115,6 +165,14 @@ Files follow this naming pattern:
 sudo make uninstall
 ```
 
+## Testing
+
+Run the test suite:
+
+```bash
+./test.sh
+```
+
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the ISC License.
