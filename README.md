@@ -101,8 +101,10 @@ s3-secrets-sync pull -e production -s api -f .env -k your_encryption_key
 | `-s, --service TYPE` | Service type (default: api) |
 | `-f, --file PATH` | Path to .env file (default: .env) |
 | `-k, --key KEY` | Encryption key (can also use ENV_ENCRYPTION_KEY env var) |
-| `-b, --bucket NAME` | S3 bucket name (can also use AWS_BUCKET_NAME env var) |
-| `-r, --region REGION` | AWS region (can also use AWS_REGION env var) |
+| `-b, --bucket NAME` | S3 bucket name (can use BUCKET_NAME env var) |
+| `-r, --region REGION` | S3 region (can use REGION env var) |
+| `--access-key ID` | S3 access key ID (can use ACCESS_KEY_ID env var) |
+| `--secret-key KEY` | S3 secret access key (can use SECRET_ACCESS_KEY env var) |
 | `--endpoint URL` | S3 endpoint URL (default: https://s3.amazonaws.com) |
 | `-h, --help` | Show help |
 | `-v, --version` | Show version information |
@@ -112,10 +114,10 @@ s3-secrets-sync pull -e production -s api -f .env -k your_encryption_key
 | Variable | Description |
 |----------|-------------|
 | `ENV_ENCRYPTION_KEY` | Encryption key (alternative to -k flag) |
-| `AWS_ACCESS_KEY_ID` | AWS access key ID |
-| `AWS_SECRET_ACCESS_KEY` | AWS secret access key |
-| `AWS_BUCKET_NAME` | S3 bucket name (alternative to -b flag) |
-| `AWS_REGION` | AWS region (alternative to -r flag) |
+| `ACCESS_KEY_ID` | S3 access key ID |
+| `SECRET_ACCESS_KEY` | S3 secret access key |
+| `BUCKET_NAME` | S3 bucket name (alternative to -b flag) |
+| `REGION` | S3 region (alternative to -r flag) |
 
 ## Examples
 
@@ -124,10 +126,10 @@ s3-secrets-sync pull -e production -s api -f .env -k your_encryption_key
 ```bash
 # Set environment variables
 export ENV_ENCRYPTION_KEY=mypassword
-export AWS_ACCESS_KEY_ID=your_access_key
-export AWS_SECRET_ACCESS_KEY=your_secret_key
-export AWS_BUCKET_NAME=your-bucket
-export AWS_REGION=us-west-2
+export ACCESS_KEY_ID=your_access_key
+export SECRET_ACCESS_KEY=your_secret_key
+export BUCKET_NAME=your-bucket
+export REGION=us-west-2
 
 # Sync (encrypt and upload)
 s3-secrets-sync sync -e staging -s api

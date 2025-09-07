@@ -66,6 +66,12 @@ main() {
     
     echo "=== Starting s3-secrets-sync tests ==="
     
+    # Set environment variables needed for testing
+    export ACCESS_KEY_ID="test_key_id"
+    export SECRET_ACCESS_KEY="test_secret_key"
+    export BUCKET_NAME="test-bucket"
+    export REGION="us-west-1"
+    
     # Create test environment
     create_test_env
     
