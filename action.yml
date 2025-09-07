@@ -1,10 +1,15 @@
 name: 'S3 Secrets Sync'
+author: 'tylerdgenius'
 description: 'Download and decrypt environment variables from S3 compatible storage'
 branding:
   icon: 'lock'
   color: 'blue'
 
 inputs:
+  command:
+    description: "sync | pull | upload | download ..."
+    required: true
+    default: "sync"
   environment:
     description: 'Environment name (development, staging, production)'
     required: true
@@ -70,7 +75,7 @@ runs:
         OUTPUT_FILE="$(pwd)/.env"
         
         # Run the command
-        ${{ github.action_path }}/s3-secrets-sync pull \
+        ${{ github.action_path }}/s3-secrets-sync ${{ inputs.command }} \
           -e "${{ inputs.environment }}" \
           -s "${{ inputs.service_name }}" \
           -t "${{ inputs.service_type }}" \
