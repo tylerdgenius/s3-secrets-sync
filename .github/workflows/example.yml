@@ -1,0 +1,30 @@
+name: Example Using S3 Secrets Sync
+
+on:
+  workflow_dispatch:
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Pull environment variables
+        id: pull-secrets
+        uses: ./.github/actions/s3-secrets-sync
+        with:
+          environment: 'development'
+          service_name: 'example'
+          encryption_key: ${{ secrets.ENV_ENCRYPTION_KEY }}
+          access_key_id: ${{ secrets.ACCESS_KEY_ID }}
+          secret_access_key: ${{ secrets.SECRET_ACCESS_KEY }}
+          bucket_name: ${{ secrets.BUCKET_NAME }}
+          file_path: './config/.env'
+          
+      - name: Show loaded environment
+        run: |
+          echo "Environment variables loaded successfully!"
+          echo "Env file location: ${{ steps.pull-secrets.outputs.env_file_path }}"
+          echo "Note: Values are not printed for security reasons"
+          echo "Number of variables loaded: $(grep -v '^#' ${{ steps.pull-secrets.outputs.env_file_path }} | grep -v '^$' | wc -l)""

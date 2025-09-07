@@ -130,6 +130,24 @@ s3-secrets-sync pull -e production -s backend
 s3-secrets-sync pull -e production -s frontend
 ```
 
+### GitHub Actions: Use in CI/CD Workflows
+
+You can use the included GitHub Action in your workflows:
+
+```yaml
+- name: Pull environment variables
+  uses: tylerdgenius/s3-secrets-sync/.github/actions/s3-secrets-sync@master
+  with:
+    environment: 'production'
+    service_name: 'backend'
+    encryption_key: ${{ secrets.ENV_ENCRYPTION_KEY }}
+    access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    bucket_name: ${{ secrets.S3_BUCKET_NAME }}
+```
+
+[See full GitHub Action documentation](./.github/actions/s3-secrets-sync/README.md)
+
 ### Local Development
 
 ```bash

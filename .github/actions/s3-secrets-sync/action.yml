@@ -1,0 +1,87 @@
+name: 'S3 Secrets Sync'
+description: 'Download and decrypt environment variables from S3 compatible storage'
+branding:
+  icon: 'lock'
+  color: 'blue'
+
+inputs:
+  environment:
+    description: 'Environment name (development, staging, production)'
+    required: true
+  service_name:
+    description: 'Service name'
+    required: true
+  service_type:
+    description: 'Service type'
+    required: false
+    default: 'api'
+  file_path:
+    description: 'Path where original env file is located'
+    required: true
+  encryption_key:
+    description: 'Encryption key'
+    required: true
+  bucket_name:
+    description: 'S3 bucket name'
+    required: true
+  region:
+    description: 'S3 region'
+    required: false
+    default: 'us-east-1'
+  access_key_id:
+    description: 'S3 access key ID'
+    required: true
+  secret_access_key:
+    description: 'S3 secret access key'
+    required: true
+  endpoint_url:
+    description: 'Custom S3 endpoint URL'
+    required: false
+    default: 'https://s3.amazonaws.com'
+
+outputs:
+  env_file_path:
+    description: 'Path to the downloaded and decrypted .env file'
+    value: ${{ steps.pull-env.outputs.downloaded_file }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup s3-secrets-sync
+      shell: bash
+      run: |
+        # Download and install s3-secrets-sync
+        curl -s https://raw.githubusercontent.com/tylerdgenius/s3-secrets-sync/master/s3-secrets-sync -o ${{ github.action_path }}/s3-secrets-sync
+        chmod +x ${{ github.action_path }}/s3-secrets-sync
+
+    - name: Pull environment variables from S3
+      id: pull-env
+      shell: bash
+      env:
+        ENV_ENCRYPTION_KEY: ${{ inputs.encryption_key }}
+        ACCESS_KEY_ID: ${{ inputs.access_key_id }}
+        SECRET_ACCESS_KEY: ${{ inputs.secret_access_key }}
+        BUCKET_NAME: ${{ inputs.bucket_name }}
+        REGION: ${{ inputs.region }}
+      run: |
+        echo "Downloading and decrypting environment variables..."
+        
+        # Always use .env in the working directory as the output file
+        OUTPUT_FILE="$(pwd)/.env"
+        
+        # Run the command
+        ${{ github.action_path }}/s3-secrets-sync pull \
+          -e "${{ inputs.environment }}" \
+          -s "${{ inputs.service_name }}" \
+          -t "${{ inputs.service_type }}" \
+          -f "${{ inputs.file_path }}" \
+          --endpoint "${{ inputs.endpoint_url }}"
+        
+        echo "Environment variables stored in $OUTPUT_FILE"
+        echo "downloaded_file=$OUTPUT_FILE" >> $GITHUB_OUTPUT
+        
+        # If GitHub Actions environment is used, also set the variables in the environment
+        if [ -n "$GITHUB_ENV" ]; then
+          echo "Adding variables to GitHub environment..."
+          grep -v '^#' "$OUTPUT_FILE" | grep -v '^$' >> $GITHUB_ENV
+        fi
