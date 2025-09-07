@@ -80,7 +80,8 @@ s3-secrets-sync pull -e production -s api
 | Option                 | Description                                | Default               |
 |------------------------|--------------------------------------------|-------------------------|
 | `-e, --env ENV`        | Environment name                           | (required)              |
-| `-s, --service TYPE`   | Service identifier                         | (required)              |
+| `-s, --service NAME`   | Service name                               | (required)              |
+| `-t, --type TYPE`      | Service type                               | `api`                   |
 | `-f, --file PATH`      | Path to .env file                          | `.env`                  |
 | `-k, --key KEY`        | Encryption key                             | `ENV_ENCRYPTION_KEY`    |
 | `-b, --bucket NAME`    | S3 bucket name                             | `BUCKET_NAME`           |
@@ -138,9 +139,9 @@ s3-secrets-sync sync -e staging -f .env \
 ## File Details
 
 Stored with this naming pattern:
-- JSON: `<service>-env-<env>.json`
-- Encrypted: `<service>-env-<env>.json.enc`
-- S3 path: `s3://<bucket>/secrets/<service>-env-<env>.json.enc`
+- JSON: `<service_name>-env-<env>-<service_type>.json`
+- Encrypted: `<service_name>-env-<env>-<service_type>.json.enc`
+- S3 path: `s3://<bucket>/secrets/<service_name>-env-<env>-<service_type>.json.enc`
 
 ## Administration
 
