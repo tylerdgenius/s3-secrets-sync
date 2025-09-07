@@ -39,6 +39,8 @@ warning() {
 PREFIX="/usr/local"
 REPO_URL="https://raw.githubusercontent.com/tylerdgenius/s3-secrets-sync/refs/heads/master"
 
+echo $REPO_URL
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case "$1" in
