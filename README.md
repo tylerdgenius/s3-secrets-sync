@@ -29,10 +29,10 @@ All dependencies auto-install if missing:
 **Option 1: Direct install script** (recommended)
 ```bash
 # Install globally (requires sudo)
-curl -fsSL https://raw.githubusercontent.com/tylerdgenius/s3-secrets-sync/main/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/tylerdgenius/s3-secrets-sync/master/install.sh | sudo bash
 
 # Install to custom location
-curl -fsSL https://raw.githubusercontent.com/tylerdgenius/s3-secrets-sync/main/install.sh | bash -s -- --prefix ~/local
+curl -fsSL https://raw.githubusercontent.com/tylerdgenius/s3-secrets-sync/master/install.sh | bash -s -- --prefix ~/local
 ```
 
 **Option 2: From repository**

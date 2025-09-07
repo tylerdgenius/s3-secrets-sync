@@ -37,7 +37,7 @@ warning() {
 
 # Default install prefix
 PREFIX="/usr/local"
-REPO_URL="https://raw.githubusercontent.com/tylerdgenius/s3-secrets-sync/main"
+REPO_URL="https://raw.githubusercontent.com/tylerdgenius/s3-secrets-sync/refs/heads/master"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
