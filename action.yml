@@ -105,6 +105,7 @@ runs:
           -f "${{ inputs.file_path }}" \
           -b "${{ inputs.bucket_name }}" \
           -r "${{ inputs.region }}" \
+          -k "${{ inputs.encryption_key }}" \
           --access-key "${{ inputs.access_key_id }}" \
           --secret-key "${{ inputs.secret_access_key }}" \
           --endpoint "${{ inputs.endpoint_url }}"
