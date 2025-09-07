@@ -1,0 +1,24 @@
+{
+  "name": "s3-secrets-sync",
+  "version": "0.0.1",
+  "description": "Tool for securely syncing environment variables to and from S3",
+  "main": "bin/secrets-sync.js",
+  "bin": {
+    "secrets-sync": "./bin/secrets-sync.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "secrets",
+    "s3",
+    "encryption"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "chalk": "^4.1.2",
+    "dotenv": "^16.3.1"
+  }
+}
