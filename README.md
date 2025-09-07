@@ -45,6 +45,16 @@ sudo make install
 sudo make install PREFIX=/custom/path
 ```
 
+After installation, the `s3-secrets-sync` command will be available system-wide. You can run it from any directory on your system:
+
+```bash
+# Verify installation
+s3-secrets-sync --version
+
+# Run commands from any location
+s3-secrets-sync [command] [options]
+```
+
 ## Quick Start
 
 ```bash
