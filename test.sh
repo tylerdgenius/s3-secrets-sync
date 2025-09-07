@@ -85,7 +85,7 @@ main() {
     run_test "Encrypt command" "$script_path encrypt -e test -s testservice -f test.env -k $test_key" || ((failures++))
     
     # Check if encrypted file was created
-    if [ -f "palanck-env-test-testservice.json.enc" ]; then
+    if [ -f "testservice-env-test.json.enc" ]; then
         echo -e "${GREEN}✓ Encrypted file created${NC}"
     else
         echo -e "${RED}✗ Encrypted file not created${NC}"
@@ -113,7 +113,7 @@ main() {
     
     # Clean up
     echo "Cleaning up test files..."
-    rm -f test.env decrypted.env palanck-env-test-testservice.json palanck-env-test-testservice.json.enc
+    rm -f test.env decrypted.env testservice-env-test.json testservice-env-test.json.enc
     
     # Final report
     echo ""

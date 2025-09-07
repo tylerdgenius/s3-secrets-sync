@@ -14,7 +14,7 @@ One-command DevOps solution for secure environment variable management with S3-c
 
 - ✅ **Security First**: AES-256 encryption with your encryption key
 - 🔄 **Seamless Workflow**: Single commands for encrypt+upload and download+decrypt
-- 🔌 **Storage Flexibility**: Works with S3 or any compatible service (MinIO, DigitalOcean, etc.)
+- 🔌 **Storage Flexibility**: Works with any S3-compatible service (AWS, MinIO, DigitalOcean, etc.)
 - 🧰 **Zero Dependencies**: Pure Bash with auto-installing requirements
 - 💻 **Cross-platform**: macOS, Linux, and CI environments
 
@@ -80,14 +80,14 @@ s3-secrets-sync pull -e production -s api
 | Option                 | Description                                | Default               |
 |------------------------|--------------------------------------------|-------------------------|
 | `-e, --env ENV`        | Environment name                           | (required)              |
-| `-s, --service TYPE`   | Service identifier                         | `api`                   |
+| `-s, --service TYPE`   | Service identifier                         | (required)              |
 | `-f, --file PATH`      | Path to .env file                          | `.env`                  |
 | `-k, --key KEY`        | Encryption key                             | `ENV_ENCRYPTION_KEY`    |
 | `-b, --bucket NAME`    | S3 bucket name                             | `BUCKET_NAME`           |
 | `-r, --region REGION`  | S3 region                                  | `REGION`                |
 | `--access-key ID`      | S3 access key ID                           | `ACCESS_KEY_ID`         |
 | `--secret-key KEY`     | S3 secret access key                       | `SECRET_ACCESS_KEY`     |
-| `--endpoint URL`       | Custom S3 endpoint                         | S3 default (s3.amazonaws.com) |
+| `--endpoint URL`       | Custom S3 endpoint                         | `https://s3.amazonaws.com` |
 | `-h, --help`           | Show help                                  |                         |
 | `-v, --version`        | Show version                               |                         |
 
@@ -138,9 +138,9 @@ s3-secrets-sync sync -e staging -f .env \
 ## File Details
 
 Stored with this naming pattern:
-- JSON: `palanck-env-<env>-<service>.json`
-- Encrypted: `palanck-env-<env>-<service>.json.enc`
-- S3 path: `s3://<bucket>/secrets/palanck-env-<env>-<service>.json.enc`
+- JSON: `<service>-env-<env>.json`
+- Encrypted: `<service>-env-<env>.json.enc`
+- S3 path: `s3://<bucket>/secrets/<service>-env-<env>.json.enc`
 
 ## Administration
 
