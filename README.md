@@ -136,7 +136,7 @@ You can use the included GitHub Action in your workflows:
 
 ```yaml
 - name: Pull environment variables
-  uses: tylerdgenius/s3-secrets-sync/.github/actions/s3-secrets-sync@master
+  uses: tylerdgenius/s3-secrets-sync@v2
   with:
     environment: 'production'
     service_name: 'backend'
