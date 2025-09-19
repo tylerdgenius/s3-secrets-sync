@@ -97,12 +97,17 @@ runs:
         # Always use .env in the working directory as the output file
         OUTPUT_FILE="$(pwd)/.env"
         
-        # Run the command
+        # Run the command with explicit credential parameters
         ${{ github.action_path }}/s3-secrets-sync ${{ inputs.command }} \
           -e "${{ inputs.environment }}" \
           -s "${{ inputs.service_name }}" \
           -t "${{ inputs.service_type }}" \
           -f "${{ inputs.file_path }}" \
+          -b "${{ inputs.bucket_name }}" \
+          -r "${{ inputs.region }}" \
+          -k "${{ inputs.encryption_key }}" \
+          --access-key "${{ inputs.access_key_id }}" \
+          --secret-key "${{ inputs.secret_access_key }}" \
           --endpoint "${{ inputs.endpoint_url }}"
         
         echo "Environment variables stored in $OUTPUT_FILE"
